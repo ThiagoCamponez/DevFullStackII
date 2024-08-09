@@ -1,51 +1,57 @@
-import Produto from "../Modelo/produto.js";
-import Categoria from "../Modelo/categoria.js";
+import AtividadeSustentavel from "../Modelo/AtividadeSustentavel.js";
+import TipoAtividadeSust from "../Modelo/tipoAtividadeSust.js";
 
-export default class ProdutoCtrl {
+export default class AtividadeSustentavelCtrl {
 
     gravar(requisicao, resposta) {
         resposta.type('application/json');
         if (requisicao.method === 'POST' && requisicao.is('application/json')) {
             const dados = requisicao.body;
-            const descricao = dados.descricao;
-            const precoCusto = dados.precoCusto;
-            const precoVenda = dados.precoVenda;
-            const dataValidade = dados.dataValidade;
-            const qtdEstoque = dados.qtdEstoque;
-            const cat_codigo = dados.categoria.codigo;
+            const nome = dados.nome;
+            const cpf = dados.cpf;
+            const contato = dados.contato;
+            const endereco = dados.endereco;
+            const bairro = dados.bairro;
+            const numero = dados.numero;
+            const tipo_id = dados.tipoAtividadeSust.id;
+            const data = dados.data;
+            const horarioInicial = dados.horarioInicial;
+            const horarioFinal = dados.horarioFinal;
+            const descricaoCompleta = dados.descricaocompleta;
 
-            if (descricao && precoCusto > 0 && precoVenda > 0 && dataValidade
-                && qtdEstoque >= 0 && cat_codigo > 0) {
-                const categoria = new Categoria(cat_codigo);
-                const produto = new Produto(0, descricao, precoCusto,
-                    precoVenda, dataValidade, qtdEstoque, categoria
+
+            if (nome && cpf > 0 && contato > 0 && endereco
+                && bairro >= 0 && numero >= 0 && tipo_id > 0 && data >0 && horarioInicial >0 && horarioFinal >0 && descricaoCompleta >0) {
+                const tipoAtividadeSust = new TipoAtividadeSust(tipo_id);
+                const atividadeSustentavel = new AtividadeSustentavel(0, nome, cpf,
+                    contato, endereco, bairro, numero, tipoAtividadeSust, data, horarioInicial, horarioFinal, descricaoCompleta
                 );
                 //resolver a promise
-                produto.gravar().then(() => {
+                atividadeSustentavel.gravar().then(() => {
                     resposta.status(200).json({
                         "status": true,
-                        "codigoGerado": produto.codigo,
-                        "mensagem": "Produto incluído com sucesso!"
+                        "codigoGerado": atividadeSustentavel.id,
+                        "mensagem": "Atividade Sustentavel incluído com sucesso!"
                     });
                 })
                     .catch((erro) => {
                         resposta.status(500).json({
                             "status": false,
-                            "mensagem": "Erro ao registrar o produto:" + erro.message
+                            "mensagem": "Erro ao registrar Atividade Sustentavel:" + erro.message
                         });
                     });
             }
             else {
                 resposta.status(400).json({
                     "status": false,
-                    "mensagem": "Por favor, os dados do produto segundo a documentação da API!"
+                    "mensagem": "Por favor, os dados da Atividade Sustentavel segundo a documentação da API!"
                 });
             }
         }
         else {
             resposta.status(400).json({
                 "status": false,
-                "mensagem": "Por favor, utilize o método POST para cadastrar um produto!"
+                "mensagem": "Por favor, utilize o método POST para cadastrar uma Atividade Sustentavel!"
             });
         }
     }
@@ -54,43 +60,48 @@ export default class ProdutoCtrl {
         resposta.type('application/json');
         if ((requisicao.method === 'PUT' || requisicao.method === 'PATCH') && requisicao.is('application/json')) {
             const dados = requisicao.body;
-            const codigo = dados.codigo;
-            const descricao = dados.descricao;
-            const precoCusto = dados.precoCusto;
-            const precoVenda = dados.precoVenda;
-            const dataValidade = dados.dataValidade;
-            const qtdEstoque = dados.qtdEstoque;
-            const cat_codigo = dados.categoria.codigo;
-            if (codigo && descricao && precoCusto > 0 && precoVenda > 0 && dataValidade
-                && qtdEstoque >= 0 && cat_codigo > 0) {
-                const categoria = new Categoria(cat_codigo);
-                const produto = new Produto(codigo, descricao, precoCusto,
-                    precoVenda, dataValidade, qtdEstoque, categoria);
+            const nome = dados.nome;
+            const cpf = dados.cpf;
+            const contato = dados.contato;
+            const endereco = dados.endereco;
+            const bairro = dados.bairro;
+            const numero = dados.numero;
+            const tipo_id = dados.tipoAtividadeSust.id;
+            const data = dados.data;
+            const horarioInicial = dados.horarioInicial;
+            const horarioFinal = dados.horarioFinal;
+            const descricaoCompleta = dados.descricaocompleta;
+            if (nome && cpf > 0 && contato > 0 && endereco
+                && bairro >= 0 && numero >= 0 && tipo_id > 0 && data >0 && horarioInicial >0 && horarioFinal >0 && descricaoCompleta >0) {
+                const tipoAtividadeSust = new TipoAtividadeSust(tipo_id);
+                const atividadeSustentavel = new AtividadeSustentavel(0, nome, cpf,
+                    contato, endereco, bairro, numero, tipoAtividadeSust, data, horarioInicial, horarioFinal, descricaoCompleta
+                    );
                 //resolver a promise
-                produto.atualizar().then(() => {
+                atividadeSustentavel.atualizar().then(() => {
                     resposta.status(200).json({
                         "status": true,
-                        "mensagem": "Produto atualizado com sucesso!"
+                        "mensagem": "Atividade Sustentável atualizada com sucesso!"
                     });
                 })
                     .catch((erro) => {
                         resposta.status(500).json({
                             "status": false,
-                            "mensagem": "Erro ao atualizar o produto:" + erro.message
+                            "mensagem": "Erro ao atualizar Atividade Sustentável:" + erro.message
                         });
                     });
             }
             else {
                 resposta.status(400).json({
                     "status": false,
-                    "mensagem": "Por favor, informe todos os dados do produto segundo a documentação da API!"
+                    "mensagem": "Por favor, informe todos os dados da Atividade Sustentável segundo a documentação da API!"
                 });
             }
         }
         else {
             resposta.status(400).json({
                 "status": false,
-                "mensagem": "Por favor, utilize os métodos PUT ou PATCH para atualizar um produto!"
+                "mensagem": "Por favor, utilize os métodos PUT ou PATCH para atualizar a Atividade Sustentável!"
             });
         }
     }
@@ -99,34 +110,34 @@ export default class ProdutoCtrl {
         resposta.type('application/json');
         if (requisicao.method === 'DELETE' && requisicao.is('application/json')) {
             const dados = requisicao.body;
-            const codigo = dados.codigo;
-            if (codigo) {
-                const produto = new Produto(codigo);
+            const id = dados.id;
+            if (id) {
+                const atividadeSustentavel = new AtividadeSustentavel(id);
                 //resolver a promise
-                produto.atualizar().then(() => {
+                atividadeSustentavel.atualizar().then(() => {
                     resposta.status(200).json({
                         "status": true,
-                        "mensagem": "Produto excluído com sucesso!"
+                        "mensagem": "Atividade Sustentável excluída com sucesso!"
                     });
                 })
                     .catch((erro) => {
                         resposta.status(500).json({
                             "status": false,
-                            "mensagem": "Erro ao excluir o produto:" + erro.message
+                            "mensagem": "Erro ao excluir a Atividade Sustentável:" + erro.message
                         });
                     });
             }
             else {
                 resposta.status(400).json({
                     "status": false,
-                    "mensagem": "Por favor, informe o código do produto!"
+                    "mensagem": "Por favor, informe o id da Atividade Sustentável!"
                 });
             }
         }
         else {
             resposta.status(400).json({
                 "status": false,
-                "mensagem": "Por favor, utilize o método DELETE para excluir um produto!"
+                "mensagem": "Por favor, utilize o método DELETE para excluir uma Atividade Sustentável!"
             });
         }
     }
@@ -141,19 +152,19 @@ export default class ProdutoCtrl {
             termo = "";
         }
         if (requisicao.method === "GET") {
-            const produto = new Produto();
-            produto.consultar(termo).then((listaProdutos) => {
+            const atividadeSustentavel = new AtividadeSustentavel();
+            atividadeSustentavel.consultar(termo).then((listaAtividades) => {
                 resposta.json(
                     {
                         status: true,
-                        listaProdutos
+                        listaAtividades
                     });
             })
                 .catch((erro) => {
                     resposta.json(
                         {
                             status: false,
-                            mensagem: "Não foi possível obter os produtos: " + erro.message
+                            mensagem: "Não foi possível obter as Atividade Sustentável: " + erro.message
                         }
                     );
                 });
@@ -161,7 +172,7 @@ export default class ProdutoCtrl {
         else {
             resposta.status(400).json({
                 "status": false,
-                "mensagem": "Por favor, utilize o método GET para consultar produtos!"
+                "mensagem": "Por favor, utilize o método GET para consultar Atividade Sustentável!"
             });
         }
     }
