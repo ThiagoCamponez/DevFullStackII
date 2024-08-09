@@ -1,5 +1,5 @@
-import Produto from '../Modelo/produto.js';
-import Categoria from '../Modelo/categoria.js';
+import AtividadeSustentavel from '../Modelo/AtividadeSustentavel.js';
+import TipoAtividadeSustentavel from '../Modelo/tipoAtividadeSust.js';
 
 import conectar from './conexao.js';
 
@@ -36,26 +36,26 @@ export default class ProdutoDAO {
 
 
     async gravar(produto) {
-        if (produto instanceof Produto) {
+        if (produto instanceof AtividadeSustentavel) {
             const sql = `INSERT INTO produto(prod_descricao, prod_precoCusto,
                 prod_precoVenda, prod_dataValidade, prod_qtdEstoque, cat_codigo)	
                 VALUES(?,?,?,?,?,?)`;
-            const parametros = [produto.descricao, produto.precoCusto, produto.precoVenda,
-            produto.dataValidade, produto.qtdEstoque, produto.categoria.codigo];
+            const parametros = [produto.nome, produto.cpf, produto.contato,
+            produto.endereco, produto.bairro, produto.numero.codigo];
 
             const conexao = await conectar();
             const retorno = await conexao.execute(sql, parametros);
-            produto.codigo = retorno[0].insertId;
+            produto.id = retorno[0].insertId;
             global.poolConexoes.releaseConnection(conexao);
         }
     }
     async atualizar(produto) {
-        if (produto instanceof Produto) {
+        if (produto instanceof AtividadeSustentavel) {
             const sql = `UPDATE produto SET prod_descricao = ?, prod_precoCusto = ?,
             prod_precoVenda = ?, prod_dataValidade = ?, prod_qtdEstoque = ?, cat_codigo = ?
             WHERE prod_codigo = ?`;
-            const parametros = [produto.descricao, produto.precoCusto, produto.precoVenda,
-            produto.dataValidade, produto.qtdEstoque, produto.categoria.codigo, produto.codigo];
+            const parametros = [produto.nome, produto.cpf, produto.contato,
+            produto.endereco, produto.bairro, produto.numero.codigo, produto.id];
 
             const conexao = await conectar();
             await conexao.execute(sql, parametros);
@@ -64,9 +64,9 @@ export default class ProdutoDAO {
     }
 
     async excluir(produto) {
-        if (produto instanceof Produto) {
+        if (produto instanceof AtividadeSustentavel) {
             const sql = `DELETE FROM produto WHERE prod_codigo = ?`;
-            const parametros = [produto.codigo];
+            const parametros = [produto.id];
             const conexao = await conectar();
             await conexao.execute(sql, parametros);
             global.poolConexoes.releaseConnection(conexao);
@@ -92,7 +92,7 @@ export default class ProdutoDAO {
             const parametros=[termo];
             const [registros, campos] = await conexao.execute(sql,parametros);
             for (const registro of registros){
-                const produto = new Produto(registro.prod_codigo,registro.prod_descricao,
+                const produto = new AtividadeSustentavel(registro.prod_codigo,registro.prod_descricao,
                                             registro.prod_precoCusto,registro.prod_precoVenda,
                                             registro.prod_dataValidade, registro.prod_qtdEstoque
                                             );
@@ -111,8 +111,8 @@ export default class ProdutoDAO {
             const parametros=['%'+termo+'%'];
             const [registros, campos] = await conexao.execute(sql,parametros);
             for (const registro of registros){
-                const categoria = new Categoria(registro.cat_codigo, registro.cat_descricao);
-                const produto = new Produto(registro.prod_codigo,registro.prod_descricao,
+                const categoria = new TipoAtividadeSustentavel(registro.cat_codigo, registro.cat_descricao);
+                const produto = new AtividadeSustentavel(registro.prod_codigo,registro.prod_descricao,
                                             registro.prod_precoCusto,registro.prod_precoVenda,
                                             registro.prod_dataValidade, registro.prod_qtdEstoque,
                                             categoria

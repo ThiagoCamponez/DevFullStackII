@@ -1,5 +1,5 @@
 //camada de interface da API que traduz HTTP
-import Categoria from "../Modelo/categoria.js";
+import TipoAtividadeSustentavel from "../Modelo/tipoAtividadeSust.js";
 
 export default class CategoriaCtrl {
 
@@ -9,12 +9,12 @@ export default class CategoriaCtrl {
             const dados = requisicao.body;
             const descricao = dados.descricao;
             if (descricao) {
-                const categoria = new Categoria(0, descricao);
+                const categoria = new TipoAtividadeSustentavel(0, descricao);
                 //resolver a promise
                 categoria.gravar().then(() => {
                     resposta.status(200).json({
                         "status": true,
-                        "codigoGerado": categoria.codigo,
+                        "codigoGerado": categoria.id,
                         "mensagem": "Categoria incluída com sucesso!"
                     });
                 })
@@ -47,7 +47,7 @@ export default class CategoriaCtrl {
             const codigo = dados.codigo;
             const descricao = dados.descricao;
             if (codigo && descricao) {
-                const categoria = new Categoria(codigo, descricao);
+                const categoria = new TipoAtividadeSustentavel(codigo, descricao);
                 //resolver a promise
                 categoria.atualizar().then(() => {
                     resposta.status(200).json({
@@ -83,7 +83,7 @@ export default class CategoriaCtrl {
             const dados = requisicao.body;
             const codigo = dados.codigo;
             if (codigo) {
-                const categoria = new Categoria(codigo);
+                const categoria = new TipoAtividadeSustentavel(codigo);
                 categoria.possuiProdutos().then(possui => {
                     if(possui == false){
                         categoria.excluir().then(() => {
@@ -132,7 +132,7 @@ export default class CategoriaCtrl {
             termo = "";
         }
         if (requisicao.method === "GET"){
-            const categoria = new Categoria();
+            const categoria = new TipoAtividadeSustentavel();
             categoria.consultar(termo).then((listaCategorias)=>{
                 resposta.json(
                     {

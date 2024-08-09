@@ -1,4 +1,4 @@
-import Categoria from "../Modelo/categoria.js";
+import TipoAtividadeSustentavel from "../Modelo/tipoAtividadeSust.js";
 import conectar from "./conexao.js";
 //DAO = Data Access Object -> Objeto de acesso aos dados
 export default class CategoriaDAO{
@@ -25,20 +25,20 @@ export default class CategoriaDAO{
         }
     }
     async gravar(categoria){
-        if (categoria instanceof Categoria){
+        if (categoria instanceof TipoAtividadeSustentavel){
             const sql = "INSERT INTO categoria(cat_descricao) VALUES(?)"; 
-            const parametros = [categoria.descricao];
+            const parametros = [categoria.nome];
             const conexao = await conectar(); //retorna uma conexão
             const retorno = await conexao.execute(sql,parametros); //prepara a sql e depois executa
-            categoria.codigo = retorno[0].insertId;
+            categoria.id = retorno[0].insertId;
             global.poolConexoes.releaseConnection(conexao);
         }
     }
 
     async atualizar(categoria){
-        if (categoria instanceof Categoria){
+        if (categoria instanceof TipoAtividadeSustentavel){
             const sql = "UPDATE categoria SET cat_descricao = ? WHERE cat_codigo = ?"; 
-            const parametros = [categoria.descricao, categoria.codigo];
+            const parametros = [categoria.nome, categoria.id];
             const conexao = await conectar(); //retorna uma conexão
             await conexao.execute(sql,parametros); //prepara a sql e depois executa
             global.poolConexoes.releaseConnection(conexao);
@@ -46,12 +46,12 @@ export default class CategoriaDAO{
     }
 
     async excluir(categoria){
-        if (categoria instanceof Categoria){
+        if (categoria instanceof TipoAtividadeSustentavel){
             //excluir a categoria implica em excluir antes os seus produtos
             //caso contrário haverá uma violação de integridade referencial no banco de dados relacional
             //essa restrição deve ser implementada na lógica de negócio da sua aplicação.
             const sql = "DELETE FROM categoria WHERE cat_codigo = ?"; 
-            const parametros = [categoria.codigo];
+            const parametros = [categoria.id];
             const conexao = await conectar(); //retorna uma conexão
             await conexao.execute(sql,parametros); //prepara a sql e depois executa
             global.poolConexoes.releaseConnection(conexao);
@@ -79,18 +79,18 @@ export default class CategoriaDAO{
         const [registros, campos] = await conexao.execute(sql,parametros);
         let listaCategorias = [];
         for (const registro of registros){
-            const categoria = new Categoria(registro.cat_codigo,registro.cat_descricao);
+            const categoria = new TipoAtividadeSustentavel(registro.cat_codigo,registro.cat_descricao);
             listaCategorias.push(categoria);
         }
         return listaCategorias;
     }
 
     async possuiProdutos(categoria){
-        if (categoria instanceof Categoria){
+        if (categoria instanceof TipoAtividadeSustentavel){
             const sql = `SELECT count(*) as qtd FROM produto p
                          INNER JOIN categoria c ON p.cat_codigo = c.cat_codigo
                          WHERE c. cat_codigo = ?`;    
-            const parametros = [categoria.codigo];
+            const parametros = [categoria.id];
             const [registros]  = await global.poolConexoes.execute(sql,parametros);
             return registros[0].qtd > 0;     
             
