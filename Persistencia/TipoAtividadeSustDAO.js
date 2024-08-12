@@ -1,7 +1,7 @@
 import TipoAtividadeSustentavel from "../Modelo/tipoAtividadeSust.js";
 import conectar from "./conexao.js";
 //DAO = Data Access Object -> Objeto de acesso aos dados
-export default class CategoriaDAO{
+export default class TipoAtividadeSustDAO{
 
     constructor() {
         this.init();
@@ -12,10 +12,10 @@ export default class CategoriaDAO{
         {
             const conexao = await conectar(); //retorna uma conexão
             const sql = `
-                CREATE TABLE IF NOT EXISTS categoria(
-                    cat_codigo INT NOT NULL AUTO_INCREMENT,
-                    cat_descricao VARCHAR(100) NOT NULL,
-                    CONSTRAINT pk_categoria PRIMARY KEY(cat_codigo)
+                CREATE TABLE IF NOT EXISTS tipoAtividadeSust(
+                    tipo_id INT NOT NULL AUTO_INCREMENT,
+                    tipo_nome VARCHAR(100) NOT NULL,
+                    CONSTRAINT pk_tipoAtividadeSust PRIMARY KEY(tipo_id)
                 );`;
             await conexao.execute(sql);
             await conexao.release();
@@ -24,34 +24,34 @@ export default class CategoriaDAO{
             console.log("Não foi possível iniciar o banco de dados: " + e.message);
         }
     }
-    async gravar(categoria){
-        if (categoria instanceof TipoAtividadeSustentavel){
-            const sql = "INSERT INTO categoria(cat_descricao) VALUES(?)"; 
-            const parametros = [categoria.nome];
+    async gravar(tipoAtividadeSust){
+        if (tipoAtividadeSust instanceof TipoAtividadeSustentavel){
+            const sql = "INSERT INTO tipoAtividadeSust(tipo_nome) VALUES(?)"; 
+            const parametros = [tipoAtividadeSust.nome];
             const conexao = await conectar(); //retorna uma conexão
             const retorno = await conexao.execute(sql,parametros); //prepara a sql e depois executa
-            categoria.id = retorno[0].insertId;
+            tipoAtividadeSust.id = retorno[0].insertId;
             global.poolConexoes.releaseConnection(conexao);
         }
     }
 
-    async atualizar(categoria){
-        if (categoria instanceof TipoAtividadeSustentavel){
-            const sql = "UPDATE categoria SET cat_descricao = ? WHERE cat_codigo = ?"; 
-            const parametros = [categoria.nome, categoria.id];
+    async atualizar(tipoAtividadeSust){
+        if (tipoAtividadeSust instanceof TipoAtividadeSustentavel){
+            const sql = "UPDATE tipoAtividadeSust SET tipo_nome = ? WHERE tipo_id = ?"; 
+            const parametros = [tipoAtividadeSust.nome, tipoAtividadeSust.id];
             const conexao = await conectar(); //retorna uma conexão
             await conexao.execute(sql,parametros); //prepara a sql e depois executa
             global.poolConexoes.releaseConnection(conexao);
         }
     }
 
-    async excluir(categoria){
-        if (categoria instanceof TipoAtividadeSustentavel){
-            //excluir a categoria implica em excluir antes os seus produtos
+    async excluir(tipoAtividadeSust){
+        if (tipoAtividadeSust instanceof TipoAtividadeSustentavel){
+            //excluir o tipo de atividade sustentável implica em excluir antes os suas atividades.
             //caso contrário haverá uma violação de integridade referencial no banco de dados relacional
             //essa restrição deve ser implementada na lógica de negócio da sua aplicação.
-            const sql = "DELETE FROM categoria WHERE cat_codigo = ?"; 
-            const parametros = [categoria.id];
+            const sql = "DELETE FROM tipoAtividadeSust WHERE tipo_id = ?"; 
+            const parametros = [tipoAtividadeSust.id];
             const conexao = await conectar(); //retorna uma conexão
             await conexao.execute(sql,parametros); //prepara a sql e depois executa
             global.poolConexoes.releaseConnection(conexao);
@@ -63,34 +63,34 @@ export default class CategoriaDAO{
         let parametros=[];
         //é um número inteiro?
         if (!isNaN(parseInt(parametroConsulta))){
-            //consultar pelo código da categoria
-            sql='SELECT * FROM categoria WHERE cat_codigo = ? order by cat_descricao';
+            //consultar pelo código do tipo de atividade sustentável
+            sql='SELECT * FROM tipoAtividadeSust WHERE tipo_id = ? order by tipo_nome';
             parametros = [parametroConsulta];
         }
         else{
-            //consultar pela descricao
+            //consultar pelo tipo de atividade sustentável
             if (!parametroConsulta){
                 parametroConsulta = '';
             }
-            sql = "SELECT * FROM categoria WHERE cat_descricao like ?";
+            sql = "SELECT * FROM tipoAtividadeSust WHERE tipo_nome like ?";
             parametros = ['%'+parametroConsulta+'%'];
         }
         const conexao = await conectar();
         const [registros, campos] = await conexao.execute(sql,parametros);
-        let listaCategorias = [];
+        let listaTipoAtividadeSust = [];
         for (const registro of registros){
-            const categoria = new TipoAtividadeSustentavel(registro.cat_codigo,registro.cat_descricao);
-            listaCategorias.push(categoria);
+            const tipoAtividadeSust = new TipoAtividadeSustentavel(registro.tipo_id,registro.tipo_nome);
+            listaTipoAtividadeSust.push(tipoAtividadeSust);
         }
-        return listaCategorias;
+        return listaTipoAtividadeSust;
     }
 
-    async possuiProdutos(categoria){
-        if (categoria instanceof TipoAtividadeSustentavel){
-            const sql = `SELECT count(*) as qtd FROM produto p
-                         INNER JOIN categoria c ON p.cat_codigo = c.cat_codigo
-                         WHERE c. cat_codigo = ?`;    
-            const parametros = [categoria.id];
+    async possuiAtividadeSust(tipoAtividadeSust){
+        if (tipoAtividadeSust instanceof TipoAtividadeSustentavel){
+            const sql = `SELECT count(*) as qtd FROM atividadeSustentavel p
+                         INNER JOIN tipoAtividadeSust c ON p.tipo_id = c.tipo_nome
+                         WHERE c. tipo_id = ?`;    
+            const parametros = [tipoAtividadeSust.id];
             const [registros]  = await global.poolConexoes.execute(sql,parametros);
             return registros[0].qtd > 0;     
             

@@ -1,4 +1,4 @@
-import AtividadeDAO from "../Persistencia/produtoDAO.js";
+import AtividadeDAO from "../Persistencia/AtividadeSustentavelDAO.js";
 import TipoAtividadeSustentavel from "./tipoAtividadeSust.js";
 
 export default class AtividadeSustentavel{
