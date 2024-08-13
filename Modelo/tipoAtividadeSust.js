@@ -62,6 +62,6 @@ export default class TipoAtividadeSustentavel {
 
     async possuiAtividade(){
         const tipoDAO = new TipoAtividadeSustDAO();
-        return await tipoDAO.possuiAtividade(this);
+        return await tipoDAO.possuiAtividadeSust(this);
     }
 }

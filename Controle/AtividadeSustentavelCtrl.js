@@ -17,11 +17,10 @@ export default class AtividadeSustentavelCtrl {
             const data = dados.data;
             const horarioInicial = dados.horarioInicial;
             const horarioFinal = dados.horarioFinal;
-            const descricaoCompleta = dados.descricaocompleta;
+            const descricaoCompleta = dados.descricaoCompleta;
 
 
-            if (nome && cpf > 0 && contato > 0 && endereco
-                && bairro >= 0 && numero >= 0 && tipo_id > 0 && data >0 && horarioInicial >0 && horarioFinal >0 && descricaoCompleta >0) {
+            if (nome && cpf && contato && endereco && bairro && numero && tipo_id && data && horarioInicial && horarioFinal && descricaoCompleta) {
                 const tipoAtividadeSust = new TipoAtividadeSust(tipo_id);
                 const atividadeSustentavel = new AtividadeSustentavel(0, nome, cpf,
                     contato, endereco, bairro, numero, tipoAtividadeSust, data, horarioInicial, horarioFinal, descricaoCompleta
@@ -44,7 +43,7 @@ export default class AtividadeSustentavelCtrl {
             else {
                 resposta.status(400).json({
                     "status": false,
-                    "mensagem": "Por favor, os dados da Atividade Sustentavel segundo a documentação da API!"
+                    "mensagem": "Por favor, informe todos os dados da Atividade Sustentavel segundo a documentação da API!"
                 });
             }
         }
@@ -70,9 +69,10 @@ export default class AtividadeSustentavelCtrl {
             const data = dados.data;
             const horarioInicial = dados.horarioInicial;
             const horarioFinal = dados.horarioFinal;
-            const descricaoCompleta = dados.descricaocompleta;
-            if (nome && cpf > 0 && contato > 0 && endereco
-                && bairro >= 0 && numero >= 0 && tipo_id > 0 && data >0 && horarioInicial >0 && horarioFinal >0 && descricaoCompleta >0) {
+            const descricaoCompleta = dados.descricaoCompleta;
+
+
+            if (nome && cpf && contato && endereco && bairro && numero && tipo_id && data && horarioInicial && horarioFinal && descricaoCompleta) {
                 const tipoAtividadeSust = new TipoAtividadeSust(tipo_id);
                 const atividadeSustentavel = new AtividadeSustentavel(0, nome, cpf,
                     contato, endereco, bairro, numero, tipoAtividadeSust, data, horarioInicial, horarioFinal, descricaoCompleta

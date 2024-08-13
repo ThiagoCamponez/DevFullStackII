@@ -1,7 +1,8 @@
-import AtividadeDAO from "../Persistencia/AtividadeSustentavelDAO.js";
+import AtividadeSustentavelDAO from "../Persistencia/AtividadeSustentavelDAO.js";
 import TipoAtividadeSustentavel from "./tipoAtividadeSust.js";
 
-export default class AtividadeSustentavel{
+export default class AtividadeSustentavel{ //Objeto
+    //Atributos
     #id;
     #nome;
     #cpf;
@@ -16,7 +17,7 @@ export default class AtividadeSustentavel{
     #descricaoCompleta;
 
 
-    constructor(id=0,nome="", cpf=0, contato=0,endereco='', bairro=0, numero=null, tipoAtividadeSustentavel=null, data=null, horarioInicial=null, horarioFinal=null,descricaoCompleta=null
+    constructor(id=0, nome="", cpf=0, contato=0, endereco="", bairro="", numero=0, tipoAtividadeSustentavel=null, data=null, horarioInicial=null, horarioFinal=null, descricaoCompleta=null
                 ){
         this.#id=id;
         this.#nome=nome;
@@ -149,22 +150,22 @@ export default class AtividadeSustentavel{
 
      //camada de modelo acessa a camada de persistencia
      async gravar(){
-        const ativDAO = new AtividadeDAO();
+        const ativDAO = new AtividadeSustentavelDAO();
         await ativDAO.gravar(this);
      }
  
      async excluir(){
-        const ativDAO = new AtividadeDAO();
+        const ativDAO = new AtividadeSustentavelDAO();
         await ativDAO.excluir(this);
      }
  
      async alterar(){
-        const ativDAO = new AtividadeDAO();
+        const ativDAO = new AtividadeSustentavelDAO();
         await ativDAO.atualizar(this);
      }
  
      async consultar(termo){
-        const ativDAO = new AtividadeDAO();
+        const ativDAO = new AtividadeSustentavelDAO();
         return await ativDAO.consultar(termo);
      }
 
