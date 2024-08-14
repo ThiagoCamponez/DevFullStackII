@@ -84,7 +84,7 @@ export default class TipoAtividadeSust {
             const id = dados.id;
             if (id) {
                 const tipoAtividadeSustentavel = new TipoAtividadeSustentavel(id);
-                tipoAtividadeSustentavel.possuiAtividade().then(possui => {
+                tipoAtividadeSustentavel.possuiAtividadeSust().then(possui => {
                     if(possui == false){
                         tipoAtividadeSustentavel.excluir().then(() => {
                             resposta.status(200).json({

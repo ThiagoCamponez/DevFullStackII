@@ -60,7 +60,7 @@ export default class TipoAtividadeSustentavel {
         return await tipoDAO.consultar(parametro);
     }
 
-    async possuiAtividade(){
+    async possuiAtividadeSust(){
         const tipoDAO = new TipoAtividadeSustDAO();
         return await tipoDAO.possuiAtividadeSust(this);
     }

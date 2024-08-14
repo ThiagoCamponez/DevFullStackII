@@ -92,9 +92,9 @@ export default class AtividadeSustentavel{ //Objeto
         return this.#tipoAtividadeSustentavel;
     }
 
-    set tipoAtividadeSustentavel(novoTipoAtividadeSustentavel){
-        if(novoTipoAtividadeSustentavel instanceof TipoAtividadeSustentavel){
-            this.#tipoAtividadeSustentavel = novoTipoAtividadeSustentavel;
+    set tipoAtividadeSustentavel(novoTipo){
+        if(novoTipo instanceof TipoAtividadeSustentavel){
+            this.#tipoAtividadeSustentavel = novoTipo;
         }
     }
 
@@ -130,7 +130,8 @@ export default class AtividadeSustentavel{ //Objeto
         this.#descricaoCompleta = novaDescricaoCompleta;
     }
 
-    toJSON(){
+    toJSON()
+    {
         return {
             id:this.#id,
             nome:this.#nome,
@@ -139,7 +140,7 @@ export default class AtividadeSustentavel{ //Objeto
             endereco:this.#endereco,
             bairro:this.#bairro,
             numero:this.#numero,
-            tipoAtividadeSustentavel:this.#tipoAtividadeSustentavel.toJSON(),
+            tipoAtividadeSustentavel:this.#tipoAtividadeSustentavel,
             data:this.#data,
             horarioInicial:this.#horarioInicial,
             horarioFinal:this.#horarioFinal,
@@ -159,7 +160,7 @@ export default class AtividadeSustentavel{ //Objeto
         await ativDAO.excluir(this);
      }
  
-     async alterar(){
+     async atualizar(){
         const ativDAO = new AtividadeSustentavelDAO();
         await ativDAO.atualizar(this);
      }

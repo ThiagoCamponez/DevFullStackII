@@ -87,12 +87,13 @@ export default class TipoAtividadeSustDAO{
 
     async possuiAtividadeSust(tipoAtividadeSust){
         if (tipoAtividadeSust instanceof TipoAtividadeSustentavel){
-            const sql = `SELECT count(*) as qtd FROM atividadeSustentavel p
-                         INNER JOIN tipoAtividadeSust c ON p.tipo_id = c.tipo_nome
-                         WHERE c. tipo_id = ?`;    
+            const sql = `SELECT count(*) as qtd 
+                         FROM atividadeSustentavel p
+                         INNER JOIN tipoAtividadeSust t ON p.tipo_id = t.tipo_id
+                         WHERE t.tipo_id = ?`;
             const parametros = [tipoAtividadeSust.id];
             const [registros]  = await global.poolConexoes.execute(sql,parametros);
-            return registros[0].qtd > 0;     
+            return registros[0].qtd > 0;
             
         }	
     }

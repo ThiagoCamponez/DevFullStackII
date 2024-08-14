@@ -16,11 +16,11 @@ CREATE TABLE atividadeSustentavel(
     ativ_endereco VARCHAR(255) DEFAULT NULL,
     ativ_bairro VARCHAR(100) DEFAULT NULL,
     ativ_numero INT(5) DEFAULT NULL,
-    tipo_nome VARCHAR(100) NOT NULL, 
+    tipo_id INT NOT NULL, 
     ativ_data DATE DEFAULT NULL,
     ativ_horarioInicial VARCHAR(10) NOT NULL,
     ativ_horarioFinal VARCHAR(10) NOT NULL,
     ativ_descricaoCompleta VARCHAR(1000) NOT NULL,
     CONSTRAINT pk_atividadeSustentavel PRIMARY KEY(ativ_id),
-    CONSTRAINT fk_tipoAtividade CHECK (tipo_nome IN (SELECT tipo_nome FROM tipoAtividadeSustentavel)) -- Verifica se tipo_nome existe na outra tabela
+    CONSTRAINT fk_atividadeSustentavel_tipoAtividadeSust FOREIGN KEY(tipo_id) REFERENCES tipoAtividadeSust(tipo_id)
 );

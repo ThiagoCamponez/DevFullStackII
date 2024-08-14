@@ -55,8 +55,7 @@ export default class AtividadeSustentavelDAO{
     }
     async atualizar(atividadeSustentavel) {
         if (atividadeSustentavel instanceof AtividadeSustentavel) {
-            const sql = `UPDATE atividadeSustentavel SET ativ_nome = ?, ativ_cpf = ?,
-            ativ_contato = ?, ativ_endereco = ?, ativ_bairro = ?, ativ_numero = ?, tipo_id = ?, ativ_data = ?, ativ_horarioInicial = ?, ativ_horarioFinal = ?, ativ_descricaoCompleta = ? WHERE ativ_id = ?`;
+            const sql = `UPDATE atividadeSustentavel SET ativ_nome = ?, ativ_cpf = ?, ativ_contato = ?, ativ_endereco = ?, ativ_bairro = ?, ativ_numero = ?, tipo_id = ?, ativ_data = ?, ativ_horarioInicial = ?, ativ_horarioFinal = ?, ativ_descricaoCompleta = ? WHERE ativ_id = ?`;
             const parametros = [atividadeSustentavel.nome, atividadeSustentavel.cpf, atividadeSustentavel.contato, atividadeSustentavel.endereco, atividadeSustentavel.bairro, atividadeSustentavel.numero, atividadeSustentavel.tipoAtividadeSustentavel.id, atividadeSustentavel.data, atividadeSustentavel.horarioInicial, atividadeSustentavel.horarioFinal, atividadeSustentavel.descricaoCompleta, atividadeSustentavel.id];
 
             const conexao = await conectar();
@@ -84,35 +83,33 @@ export default class AtividadeSustentavelDAO{
         let listaAtividades = [];
         if (!isNaN(parseInt(termo))){
             //consulta pelo código do produto
-            const sql = `SELECT p.ativ_id, p.ativ_nome, p.ativ_cpf, p.ativ_contato, 
-                         p.ativ_endereco, p.ativ_bairro, p.ativ_numero, p.tipo_id, p.ativ_data, p.ativ_horarioInicial, p.ativ_horarioFinal, p.ativ_descricaoCompleta
-                         FROM atividadeSustentavel p 
-                         INNER JOIN tipoAtividadeSust t ON p.tipo_id = t.tipo_id
-                         WHERE p.ativ_id = ?
-                         ORDER BY p.ativ_nome            
+            const sql = `SELECT p.ativ_id, p.ativ_nome, p.ativ_cpf, p.ativ_contato, p.ativ_endereco, p.ativ_bairro, p.ativ_numero, 
+            t.tipo_id, DATE_FORMAT(p.ativ_data, '%d/%m/%Y') AS ativ_data, p.ativ_horarioInicial, p.ativ_horarioFinal, p.ativ_descricaoCompleta
+            FROM atividadeSustentavel p 
+            INNER JOIN tipoAtividadeSust t ON p.tipo_id = t.tipo_id
+            WHERE p.ativ_id = ?
+            ORDER BY p.ativ_nome           
             `;
             const parametros=[termo];
             const [registros, campos] = await conexao.execute(sql,parametros);
             for (const registro of registros){
-                const atividadeSustentavel = new AtividadeSustentavel(registro.ativ_id, registro.ativ_nome, registro.ativ_cpf, registro.ativ_contato, registro.ativ_endereco, registro.ativ_bairro, registro.ativ_numero, registro.ativ_data, registro.ativ_horarioInicial, registro.ativ_horarioFinal, registro.ativ_descricaoCompleta);
+                const atividadeSustentavel = new AtividadeSustentavel(registro.ativ_id, registro.ativ_nome, registro.ativ_cpf, registro.ativ_contato, registro.ativ_endereco, registro.ativ_bairro, registro.ativ_numero, registro.tipo_id, registro.ativ_data, registro.ativ_horarioInicial, registro.ativ_horarioFinal, registro.ativ_descricaoCompleta);
                 listaAtividades.push(atividadeSustentavel);
             }
         }
         else
         {
             //consulta pela descrição do produto
-            const sql = `SELECT p.ativ_id, p.ativ_nome, p.ativ_cpf, p.ativ_contato, 
-                         p.ativ_endereco, p.ativ_bairro, p.ativ_numero, p.tipo_id, p.ativ_data, p.ativ_horarioInicial, p.ativ_horarioFinal, p.ativ_descricaoCompleta
-                         FROM atividadeSustentavel p 
-                         INNER JOIN tipoAtividadeSust t ON p.tipo_id = t.tipo_id
-                         WHERE p.ativ_nome like ?
-                         ORDER BY p.ativ_nome`;
+            const sql = `SELECT p.ativ_id, p.ativ_nome, p.ativ_cpf, p.ativ_contato, p.ativ_endereco, p.ativ_bairro, p.ativ_numero, t.tipo_id, t.tipo_nome, DATE_FORMAT(p.ativ_data, '%d/%m/%Y') AS ativ_data, p.ativ_horarioInicial, p.ativ_horarioFinal, p.ativ_descricaoCompleta
+            FROM atividadeSustentavel p 
+            INNER JOIN tipoAtividadeSust t ON p.tipo_id = t.tipo_id
+            WHERE p.ativ_nome like ?
+            ORDER BY p.ativ_nome`;
             const parametros=['%'+termo+'%'];
             const [registros, campos] = await conexao.execute(sql,parametros);
             for (const registro of registros){
-                const tipoAtividadeSust = new TipoAtividadeSustentavel(registro.tipo_id, registro.tipo_nome);
-                const atividadeSustentavel = new AtividadeSustentavel(registro.ativ_id, registro.ativ_nome, registro.ativ_cpf, registro.ativ_contato, registro.ativ_endereco, registro.ativ_bairro, registro.ativ_numero, registro.ativ_data, registro.ativ_horarioInicial, registro.ativ_horarioFinal, registro.ativ_descricaoCompleta
-                                            );
+                const tipoAtividadeSustentavel = new TipoAtividadeSustentavel(registro.tipo_id, registro.tipo_nome);
+                const atividadeSustentavel = new AtividadeSustentavel(registro.ativ_id, registro.ativ_nome, registro.ativ_cpf, registro.ativ_contato, registro.ativ_endereco, registro.ativ_bairro, registro.ativ_numero, tipoAtividadeSustentavel, registro.ativ_data, registro.ativ_horarioInicial, registro.ativ_horarioFinal, registro.ativ_descricaoCompleta);
                 listaAtividades.push(atividadeSustentavel);
             }
         }

@@ -22,9 +22,7 @@ export default class AtividadeSustentavelCtrl {
 
             if (nome && cpf && contato && endereco && bairro && numero && tipo_id && data && horarioInicial && horarioFinal && descricaoCompleta) {
                 const tipoAtividadeSust = new TipoAtividadeSust(tipo_id);
-                const atividadeSustentavel = new AtividadeSustentavel(0, nome, cpf,
-                    contato, endereco, bairro, numero, tipoAtividadeSust, data, horarioInicial, horarioFinal, descricaoCompleta
-                );
+                const atividadeSustentavel = new AtividadeSustentavel(0, nome, cpf, contato, endereco, bairro, numero, tipoAtividadeSust, data, horarioInicial, horarioFinal, descricaoCompleta);
                 //resolver a promise
                 atividadeSustentavel.gravar().then(() => {
                     resposta.status(200).json({
@@ -59,6 +57,7 @@ export default class AtividadeSustentavelCtrl {
         resposta.type('application/json');
         if ((requisicao.method === 'PUT' || requisicao.method === 'PATCH') && requisicao.is('application/json')) {
             const dados = requisicao.body;
+            const id = dados.id;
             const nome = dados.nome;
             const cpf = dados.cpf;
             const contato = dados.contato;
@@ -72,11 +71,9 @@ export default class AtividadeSustentavelCtrl {
             const descricaoCompleta = dados.descricaoCompleta;
 
 
-            if (nome && cpf && contato && endereco && bairro && numero && tipo_id && data && horarioInicial && horarioFinal && descricaoCompleta) {
+            if (id &&nome && cpf && contato && endereco && bairro && numero && tipo_id && data && horarioInicial && horarioFinal && descricaoCompleta) {
                 const tipoAtividadeSust = new TipoAtividadeSust(tipo_id);
-                const atividadeSustentavel = new AtividadeSustentavel(0, nome, cpf,
-                    contato, endereco, bairro, numero, tipoAtividadeSust, data, horarioInicial, horarioFinal, descricaoCompleta
-                    );
+                const atividadeSustentavel = new AtividadeSustentavel(id, nome, cpf, contato, endereco, bairro, numero, tipoAtividadeSust, data, horarioInicial, horarioFinal, descricaoCompleta);
                 //resolver a promise
                 atividadeSustentavel.atualizar().then(() => {
                     resposta.status(200).json({
@@ -114,7 +111,7 @@ export default class AtividadeSustentavelCtrl {
             if (id) {
                 const atividadeSustentavel = new AtividadeSustentavel(id);
                 //resolver a promise
-                atividadeSustentavel.atualizar().then(() => {
+                atividadeSustentavel.excluir().then(() => {
                     resposta.status(200).json({
                         "status": true,
                         "mensagem": "Atividade Sustentável excluída com sucesso!"
