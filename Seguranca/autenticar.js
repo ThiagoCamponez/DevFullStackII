@@ -8,7 +8,7 @@ export default function login(req, resp){
     if(usuario === 'admin' && senha === 'admin'){
 
         req.session.usuario = usuario;
-        resp.status(200).json({status: true, mensagem: 'Login efetuado com sucesso!', token: assinar({usuario})});
+        resp.status(200).json({status: true, mensagem: 'Login efetuado com sucesso!', token: assinar(usuario)});
     } else{
         resp.status(401).json({status: false, mensagem: 'Usuário ou senha inválidos!'});
     }

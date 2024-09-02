@@ -3,7 +3,7 @@ import cors from 'cors';
 import rotaTipoAtividadeSust from './Rotas/rotaTipoAtividadeSust.js';
 import rotaAtividadeSustentavel from './Rotas/rotaAtividadeSustentavel.js';
 import rotaAutenticacao from './Rotas/rotaAutenticacao.js';
-import verificarAutenticacao from './Seguranca/autenticar.js';
+import {verificarAutenticacao} from './Seguranca/autenticar.js';
 import session from 'express-session';
 import dotenv from 'dotenv';
 
