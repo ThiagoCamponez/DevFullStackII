@@ -64,7 +64,7 @@ export default class AtividadeSustentavelCtrl {
             const endereco = dados.endereco;
             const bairro = dados.bairro;
             const numero = dados.numero;
-            const tipo_id = dados.tipoAtividadeSust.id;
+            const tipo_id = dados.tipoAtividadeSustentavel.id;
             const data = dados.data;
             const horarioInicial = dados.horarioInicial;
             const horarioFinal = dados.horarioFinal;
