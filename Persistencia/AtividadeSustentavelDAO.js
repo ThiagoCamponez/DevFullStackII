@@ -1,6 +1,7 @@
 import AtividadeSustentavel from '../Modelo/AtividadeSustentavel.js';
 import TipoAtividadeSustentavel from '../Modelo/tipoAtividadeSust.js';
-
+import Beneficiario from '../Modelo/Beneficiario.js';
+import AtividadeBeneficiario from '../Modelo/AtividadeBeneficiario.js';
 import conectar from './conexao.js';
 
 export default class AtividadeSustentavelDAO{
@@ -43,13 +44,32 @@ export default class AtividadeSustentavelDAO{
 
     async gravar(atividadeSustentavel) {
         if (atividadeSustentavel instanceof AtividadeSustentavel) {
-            const sql = `INSERT INTO atividadeSustentavel(ativ_nome, ativ_cpf, ativ_contato, ativ_endereco, ativ_bairro, ativ_numero, tipo_id, ativ_data, ativ_horarioInicial, ativ_horarioFinal, ativ_descricaoCompleta)	
-                VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
-            const parametros = [atividadeSustentavel.nome, atividadeSustentavel.cpf, atividadeSustentavel.contato, atividadeSustentavel.endereco, atividadeSustentavel.bairro, atividadeSustentavel.numero, atividadeSustentavel.tipoAtividadeSustentavel.id, atividadeSustentavel.data, atividadeSustentavel.horarioInicial, atividadeSustentavel.horarioFinal, atividadeSustentavel.descricaoCompleta];
-
             const conexao = await conectar();
-            const retorno = await conexao.execute(sql, parametros);
-            atividadeSustentavel.id = retorno[0].insertId;
+            await conexao.beginTransaction();
+            try {
+                //Insere os dados na tabela AtividadeSustentavel
+                const sql = `INSERT INTO atividadeSustentavel(ativ_nome, ativ_cpf, ativ_contato, ativ_endereco, ativ_bairro, ativ_numero, tipo_id, ativ_data, ativ_horarioInicial, ativ_horarioFinal, ativ_descricaoCompleta)	
+                VALUES(?,?,?,?,?,?,?,?,?,?,?)`;
+                const parametros = [atividadeSustentavel.nome, atividadeSustentavel.cpf, atividadeSustentavel.contato, atividadeSustentavel.endereco, atividadeSustentavel.bairro, atividadeSustentavel.numero, atividadeSustentavel.tipoAtividadeSustentavel.id, atividadeSustentavel.data, atividadeSustentavel.horarioInicial, atividadeSustentavel.horarioFinal, atividadeSustentavel.descricaoCompleta];
+                const retorno = await conexao.execute(sql, parametros);
+                atividadeSustentavel.id = retorno[0].insertId;
+
+                //Insere os dados na tabela AtividadeBeneficiario
+                const sql2 = `INSERT INTO atividadeBeneficiario(ativ_id,ben_id,papel) VALUES(?,?,?)`;
+                for (const beneficiario of atividadeSustentavel.beneficiarios) {
+                    const parametro2 = [atividadeSustentavel.id, beneficiario.id, beneficiario.papel];
+                    await conexao.execute(sql2, parametro2);                    
+                }
+                await conexao.commit(); // Confirma a transação
+            } 
+            catch (error) {
+                await conexao.rollback(); // Volta o banco de dados
+                throw error; // Lança a excessão
+            }
+            
+
+            
+            
             global.poolConexoes.releaseConnection(conexao);
         }
     }

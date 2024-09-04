@@ -1,7 +1,7 @@
 import AtividadeSustentavelDAO from "../Persistencia/AtividadeSustentavelDAO.js";
 import TipoAtividadeSustentavel from "./tipoAtividadeSust.js";
 
-export default class AtividadeSustentavel{ //Objeto
+export default class AtividadeSustentavel{ //Objeto    EQUIVALE --> PEDIDO
     //Atributos
     #id;
     #nome;
